@@ -10,9 +10,11 @@ neigh_2d_4_skew = ((x-1,y-1), (x+1,y-1), (x-1, y-1), (x+1, y+1))
 neigh_2d_8 = neigh_2d_4  + neigh_2d_4_skew
 neigh_2d_9 = neigh_2d_8 + (x,y)
 
-def sdf(s=""):
+def sdf(*args):
+    if len(args)==0:
+        args = [""]
     if debug:
-        print(s)
+        print(*args)
 
 
 def bake_main(script_name, p1, p2):
@@ -38,5 +40,15 @@ def bake_main(script_name, p1, p2):
         if args.p2:
             submit(res, part="b", day=int(day), year=args.year)
         # run(args)
+
+    return main
+
+def bake_main2():
+    def main():
+        parser = argparse.ArgumentParser()
+        parser.add_argument("-d", "--debug", action="store_true", help="Enable debug")
+        args = parser.parse_args()
+        global debug
+        debug = args.debug
 
     return main
