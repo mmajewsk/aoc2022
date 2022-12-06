@@ -41,8 +41,8 @@ def p1(reverted = True):
         take = stacks[a-1][:n]
         del stacks[a-1][:n]
         if reverted:
-            rt = list(reversed(take))
-        stacks[b-1] = rt + stacks[b-1]
+            take = list(reversed(take))
+        stacks[b-1] = take + stacks[b-1]
     message = "".join([a[0] for a in stacks])
     sdf(message)
     # day/message
