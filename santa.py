@@ -2,13 +2,15 @@ from aocd import submit
 import argparse
 
 debug = False
-x= 0
-y=0
-neigh_2d_4 = ((x-1,y), (x+1,y), (x, y-1), (x, y+1))
-neigh_2d_5 = neigh_2d_4  + (x,y)
-neigh_2d_4_skew = ((x-1,y-1), (x+1,y-1), (x-1, y-1), (x+1, y+1))
-neigh_2d_8 = neigh_2d_4  + neigh_2d_4_skew
-neigh_2d_9 = neigh_2d_8 + (x,y)
+
+def nei(x,y):
+
+    neigh_2d_4 = ((x-1,y), (x+1,y), (x, y-1), (x, y+1))
+    neigh_2d_5 = neigh_2d_4  + ((x,y),)
+    neigh_2d_4_skew = ((x-1,y-1), (x+1,y-1), (x-1, y+1), (x+1, y+1))
+    neigh_2d_8 = neigh_2d_4  + neigh_2d_4_skew
+    neigh_2d_9 = neigh_2d_8 + ((x,y),)
+    return neigh_2d_9
 
 def sdf(*args):
     if len(args)==0:
