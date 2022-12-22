@@ -51,29 +51,13 @@ def go(dire, pos, expos):
     if ndire is None:
         return None
     ndire, nface = cube[face][dire]
-    if dire == 2 and ndire==0:
+    if abs(dire-ndire) == 2:
         ny = faces[nface]["y"][-1] + 1 - (y % SIZE)
-    elif dire == 3 and ndire == 0:
-        ny = faces[nface]["y"][0] + (x - 1) % SIZE
-    elif dire == 0 and ndire==2:
-        ny = faces[nface]["y"][-1] + 1 - ((y % SIZE))
-    elif dire == 1 and ndire==2:
-        ny = faces[nface]["y"][0] + ((x - 1) % SIZE)
-    elif dire == 3 and ndire == 3:
+    elif dire == ndire:
         nx = faces[nface]["x"][0] + ((x - 1) % SIZE)
-    elif dire == 0 and ndire==3:
-        nx = faces[nface]["x"][0] + ((y - 1) % SIZE)
-    elif dire == 2 and ndire==1:
-        nx = faces[nface]["x"][0] + ((y - 1) % SIZE)
-    elif dire == 0 and ndire == 2:
-        ny = faces[nface]["y"][-1] + 1 - (y % SIZE)
-    elif dire == 1 and ndire == 2:
+    elif (ndire-1) %4 == dire:
         ny = faces[nface]["y"][0] + ((x - 1) % SIZE)
-    elif dire == 0 and ndire == 3:
-        nx = faces[nface]["x"][0] + ((y - 1) % SIZE)
-    elif dire == 1 and ndire == 1:
-        nx = faces[nface]["x"][0] + ((x - 1) % SIZE)
-    elif dire == 2 and ndire == 1:
+    elif (ndire-1) %4 != dire:
         nx = faces[nface]["x"][0] + ((y - 1) % SIZE)
 
     if ndire == 0:
