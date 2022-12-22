@@ -21,25 +21,22 @@ faces_k = {
     6: {"x": 0, "y": 3},
 }
 
-faces_m = {}
-for k,v in faces_k.items():
-    faces_m[k] = {
-        'x': (1+SIZE*v['x'], SIZE*(v['x']+1)),
-        'y': (1+SIZE*v['y'], SIZE*(v['y']+1))
+faces = {}
+for k, v in faces_k.items():
+    faces[k] = {
+        "x": (1 + SIZE * v["x"], SIZE * (v["x"] + 1)),
+        "y": (1 + SIZE * v["y"], SIZE * (v["y"] + 1)),
     }
 
-faces = {
-    1: {"x": (51, 100), "y": (1, 50)},
-    # 50<x<=100
-    # 0<y<=50
-    2: {"x": (101, 150), "y": (1, 50)},
-    3: {"x": (51, 100), "y": (51, 100)},
-    4: {"x": (51, 100), "y": (101, 150)},
-    5: {"x": (1, 50), "y": (101, 150)},
-    6: {"x": (1, 50), "y": (151, 200)},
+cube = {
+    1: [None, None, (0, 5), (0, 6)],
+    2: [(2, 4), (2, 3), None, (3, 6)],
+    3: [(3, 2), None, (1, 5), None],
+    4: [(2, 2), (2, 6), None, None],
+    5: [None, None, (0, 1), (0, 3)],
+    6: [(3, 4), (1, 2), (1, 1), None],
 }
 
-assert faces==faces_m, faces_m
 
 def go(dire, pos, expos):
     px, py = expos
@@ -49,94 +46,35 @@ def go(dire, pos, expos):
         if r["x"][0] <= px <= r["x"][1] and r["y"][0] <= py <= r["y"][1]:
             face = f
             break
-
     assert face is not None, (expos, pos)
-
-    sdf("face", face, expos, "dire", dire, "---", pos)
-    # nx, ny = expos
-    ndire = dire
-    if face == 1:
-        if dire in (0, 1):
-            return None
-        elif dire == 2:
-            ndire = 0
-            nface = 5
-            ny = faces[nface]["y"][-1]+1 - (y % SIZE)
-        elif dire == 3:
-            ndire = 0
-            nface = 6
-            ny = faces[nface]["y"][0] + (x-1) % SIZE
-    elif face == 2:
-        if dire == 2:
-            return None
-        elif dire == 0:
-            ndire = 2
-            nface = 4
-            ny = faces[nface]["y"][-1]+1 - ((y % SIZE))
-        elif dire == 1:
-            ndire = 2
-            nface = 3
-            ny = faces[nface]["y"][0] + ((x-1) % SIZE)
-        elif dire == 3:
-            ndire = 3
-            nface = 6
-            nx = faces[nface]["x"][0] + ((x-1) % SIZE)
-        else:
-            1 / 0
-    elif face == 3:
-        if dire in (1, 3):
-            return None
-        elif dire == 0:
-            ndire = 3
-            nface = 2
-            nx = faces[nface]["x"][0] + ((y-1) % SIZE)
-        elif dire == 2:
-            ndire = 1
-            nface = 5
-            nx = faces[nface]["x"][0] + ((y-1) % SIZE)
-        else:
-            1 / 0
-    elif face == 4:
-        if dire in (2, 3):
-            return None
-        elif dire == 0:
-            ndire = 2
-            nface = 2
-            ny = faces[nface]["y"][-1]+1 - (y % SIZE)
-        elif dire == 1:
-            ndire = 2
-            nface = 6
-            ny = faces[nface]["y"][0] + ((x-1) % SIZE)
-    elif face == 5:
-        if dire in (0, 1):
-            return None
-        elif dire == 2:
-            ndire = 0
-            nface = 1
-            ny = faces[nface]["y"][-1]+1 - (y % SIZE)
-        elif dire == 3:
-            ndire = 0
-            nface = 3
-            ny = faces[nface]["y"][0] + ((x-1) % SIZE)
-        else:
-            1 / 0
-    elif face == 6:
-        if dire == 3:
-            return None
-        elif dire == 0:
-            ndire = 3
-            nface = 4
-            nx = faces[nface]["x"][0] + ((y-1) % SIZE)
-        elif dire == 1:
-            ndire = 1
-            nface = 2
-            nx = faces[nface]["x"][0] + ((x-1) % SIZE)
-        elif dire == 2:
-            ndire = 1
-            nface = 1
-            nx = faces[nface]["x"][0] + ((y-1) % SIZE)
-        else:
-            1 / 0
+    ndire = cube[face][dire]
+    if ndire is None:
+        return None
+    ndire, nface = cube[face][dire]
+    if dire == 2 and ndire==0:
+        ny = faces[nface]["y"][-1] + 1 - (y % SIZE)
+    elif dire == 3 and ndire == 0:
+        ny = faces[nface]["y"][0] + (x - 1) % SIZE
+    elif dire == 0 and ndire==2:
+        ny = faces[nface]["y"][-1] + 1 - ((y % SIZE))
+    elif dire == 1 and ndire==2:
+        ny = faces[nface]["y"][0] + ((x - 1) % SIZE)
+    elif dire == 3 and ndire == 3:
+        nx = faces[nface]["x"][0] + ((x - 1) % SIZE)
+    elif dire == 0 and ndire==3:
+        nx = faces[nface]["x"][0] + ((y - 1) % SIZE)
+    elif dire == 2 and ndire==1:
+        nx = faces[nface]["x"][0] + ((y - 1) % SIZE)
+    elif dire == 0 and ndire == 2:
+        ny = faces[nface]["y"][-1] + 1 - (y % SIZE)
+    elif dire == 1 and ndire == 2:
+        ny = faces[nface]["y"][0] + ((x - 1) % SIZE)
+    elif dire == 0 and ndire == 3:
+        nx = faces[nface]["x"][0] + ((y - 1) % SIZE)
+    elif dire == 1 and ndire == 1:
+        nx = faces[nface]["x"][0] + ((x - 1) % SIZE)
+    elif dire == 2 and ndire == 1:
+        nx = faces[nface]["x"][0] + ((y - 1) % SIZE)
 
     if ndire == 0:
         nx = faces[nface]["x"][0]
@@ -146,7 +84,7 @@ def go(dire, pos, expos):
         nx = faces[nface]["x"][-1]
     elif ndire == 3:
         ny = faces[nface]["y"][-1]
-    sdf("exit go", 'ndire', ndire, 'ncords', (nx, ny))
+    sdf("exit go", "ndire", ndire, "ncords", (nx, ny))
     return ndire, (nx, ny)
 
 
@@ -183,9 +121,6 @@ def p1():
         moves.append((int(step), r))
     start = xs[0], ys[0]
     dire = 0
-    # start = min(filter(lambda x: x[0]==0, mapa.keys()), key=lambda x: x[1])
-    sdf(moves)
-    sdf("start", start, vals[0])
     pos = start
     dire = 0
     for step, r in moves:
@@ -204,25 +139,6 @@ def p1():
             else:
                 1 / 0
             if (nx, ny) not in mapa.keys():
-                # mx, my = nx,ny
-                # if dire == 0:
-                #     mx = min(
-                #         filter(lambda x: x[1] == ny, mapa.keys()), key=lambda x: x[0]
-                #     )[0]
-                # elif dire == 1:
-                #     my = min(
-                #         filter(lambda x: x[0] == nx, mapa.keys()), key=lambda x: x[1]
-                #     )[1]
-                # elif dire == 2:
-                #     mx = max(
-                #         filter(lambda x: x[1] == ny, mapa.keys()), key=lambda x: x[0]
-                #     )[0]
-                # elif dire == 3:
-                #     my = max(
-                #         filter(lambda x: x[0] == nx, mapa.keys()), key=lambda x: x[1]
-                #     )[1]
-                # else:
-                #     1 / 0
                 edge = go(dire, (nx, ny), (x, y))
                 ndire, npos = edge
                 nx, ny = npos
@@ -235,7 +151,6 @@ def p1():
                 dire = dire
                 break
 
-            sdf("outer", pos, (nx, ny), (x, y), mapa[pos])
         if r == "R":
             dire += 1
         else:
